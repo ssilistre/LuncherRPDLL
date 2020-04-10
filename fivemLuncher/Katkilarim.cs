@@ -35,7 +35,7 @@ namespace fivemLuncher
         {
             try
             {
-                long sayi = Convert.ToInt64(txtSteamid.Text);
+                long sayi = Convert.ToInt64(txtSteamid.Text.Trim());
                 String b = Convert.ToString(sayi, 16);
                 string c = "steam:" + b;
                 Properties.Settings.Default.steamid = c;
@@ -58,6 +58,11 @@ namespace fivemLuncher
         {
             txtSteamid.Text = Properties.Settings.Default.steamid;
            
+        }
+
+        private void btnKapat_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

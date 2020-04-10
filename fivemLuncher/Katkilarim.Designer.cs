@@ -90,11 +90,11 @@
             // 
             // btnKaydet
             // 
-            this.btnKaydet.Location = new System.Drawing.Point(206, 109);
+            this.btnKaydet.Location = new System.Drawing.Point(161, 110);
             this.btnKaydet.Name = "btnKaydet";
-            this.btnKaydet.Size = new System.Drawing.Size(121, 32);
+            this.btnKaydet.Size = new System.Drawing.Size(219, 32);
             this.btnKaydet.TabIndex = 7;
-            this.btnKaydet.Text = "Kaydet";
+            this.btnKaydet.Text = "Kaydet/Save";
             this.btnKaydet.UseVisualStyleBackColor = true;
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
             // 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -17,8 +18,12 @@ namespace fivemLuncher
 
     public class ayarlar
     {
+        private DiscordRpc.EventHandlers handlers;
+        private DiscordRpc.RichPresence presence;
         [DllImport("kernel32.dll")]
         static extern uint GetPrivateProfileString(string kategori, string anahtar, string lpDefault, StringBuilder sb, int sbKapasite, string dosyaAdi);
+        [DllImport("psapi.dll")]
+        public static extern bool EmptyWorkingSet(IntPtr hProcess);
         /* Bütün Tanımlamalar ve Ayarlar*/
         private string kontrolEdilicekUrl = "https://www.fivemtr.net/misc.php?page=guncelle";
        private string hileKontrol = "";
@@ -41,37 +46,14 @@ namespace fivemLuncher
        private string userName = "";
        private string sunucuKayitLink="";
        private string sunucuOnlinesayisi = "";
+       private string kisiSayisi = "";
        private string kayitliSteamid = Properties.Settings.Default.steamid; //sss
-        /* Bütün Tanımlamalar ve Ayarlar*////
+       /* Bütün Tanımlamalar ve Ayarlar*////
+        /*********************************/
+        /*********************************/
+        /*********************************/
+        /*********************************/
 
-        /*********************************
-         *                              *
-         *                              *
-         *                              *
-         *                              *
-         *                              */
-        public string _luncherBaslik = "Fivem Luncher SSilistre";
-        public string _weebHookLink = "";
-        public string _discordLink = "https://discord.gg/FX9jRCW";
-        public string _oyunip = "";
-        public string _oyunport = "";
-        public string _ozelsunucuno = "0";
-        public string _reklamMetni = "";
-        public string _resim1Link = "";
-        public string _resim2Link = "";
-        public string _resim3Link = "";
-        /*********************************
-       *                              *
-       *                              *
-       *                              *
-       *                              *
-       *                              */
-        /*********************************
-     *                              *
-     *                              *
-     *                              *
-     *                              *
-     *                              */
         public void servisKontrol()
         {
             try
@@ -135,13 +117,13 @@ namespace fivemLuncher
                               .Where(x => x.ProcessName.ToLower()
                                            .StartsWith(process))
                               .ToList()
-                              .ForEach(x => x.Kill());
-                              
+                              .ForEach(x => x.Kill());                             
                 }        
             }
             else
             {
                 kapatProgrami();
+               
             }
 
         }
@@ -158,6 +140,7 @@ namespace fivemLuncher
             foreach (var process in Process.GetProcessesByName("FiveM"))
             {
                 process.Kill();
+         
             }
         }
         /***********************************
@@ -171,9 +154,8 @@ namespace fivemLuncher
         {
             if (Application.ProductVersion != programSurumu)
             {
-                MessageBox.Show("Bu ürünün yeni bir versionu mevcut lütfen FivemTR.Net Güncel Halini indirin.!", baslikHatalar, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                System.Diagnostics.Process.Start(guncellemeLink);
+                MessageBox.Show("Luancher Kütüphanesi güncel değil lütfen güncelleyin",baslikHatalar);
+                linkac("https://github.com/ssilistre/LuncherRP");
             }
         }
         /***********************************
@@ -230,14 +212,22 @@ namespace fivemLuncher
         * 
         * ********************************/
         public void luncherozelgiris(string sunucuanahtar)
-        {
-                sunucuipogen(sunucuanahtar);
-                string str = kayitliSteamid;
+        {   
+            string str = kayitliSteamid;
+            if (str=="")
+            {
+                MessageBox.Show("Lütfen önce steam64id nizi giriniz !");
+            }
+            else
+            {
+                sunucuipogen(sunucuanahtar.Trim());
                 NameValueCollection data = new NameValueCollection();
                 WebClient webClient = new WebClient();
                 byte[] bytes = webClient.UploadValues("http://oyna.tekyazilim.shop/kayit.php?sunucuid=" + sunucuanahtar + "&steamhexid=" + str + "&online=1&durum=1", "POST", data);
                 string @string = Encoding.UTF8.GetString(bytes);
                 System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
+            }
+                 
         
             
         }
@@ -249,9 +239,7 @@ namespace fivemLuncher
         * 
         * ********************************/
         public void leyjonrpgiris()
-        {
-            
-            
+        {  
             System.Diagnostics.Process.Start("fivem://connect/" + ip_ana + ":" + port_ana);
         }
         /***********************************
@@ -276,17 +264,14 @@ namespace fivemLuncher
         {
             try
             {
-                string link = "http://oyna.tekyazilim.shop/oku.php?sunucuid=" + sunucuanahtar;  //link değişkenine çekeceğimiz web sayafasının linkini yazıyoruz.
-
-                Uri url = new Uri(link); //Uri tipinde değişeken linkimizi veriyoruz.
-
-                WebClient client = new WebClient(); // webclient nesnesini kullanıyoruz bağlanmak için.
-                client.Encoding = Encoding.UTF8; //türkçe karakter sorunu yapmaması için encoding utf8 yapıyoruz.
-
-                string html = client.DownloadString(url); // siteye bağlanıp tüm sayfanın html içeriğini çekiyoruz.
- 
+                string link = "http://oyna.tekyazilim.shop/oku.php?sunucuid=" + sunucuanahtar.Trim();
+                Uri url = new Uri(link); 
+                WebClient client = new WebClient(); 
+                client.Encoding = Encoding.UTF8; 
+                string html = client.DownloadString(url);
                 String kisisayisi = html.ToString();
-                return kisisayisi;
+                kisiSayisi = kisisayisi;
+                return kisiSayisi;
             }
             catch (Exception)
             {
@@ -346,7 +331,7 @@ namespace fivemLuncher
         * 
         * 
         * ********************************/
-        public void steamidgir()
+        public void steamidgirformu()
         {
             Katkilarim myForm = new Katkilarim();
             myForm.ShowDialog();
@@ -358,28 +343,35 @@ namespace fivemLuncher
        * 
        * 
        * ********************************/
-        public string VeriOku(string kategori, string anahtar)
+        public void DicordRC(string Sunucuadı,String altmesaj)
         {
-            string veri="";
             try
             {
-                String dosyaAdi = Path.GetDirectoryName(Application.ExecutablePath) + "\\luncher_ayar.ini";
-                //Okunacak veriyi okumak ve kapasitesini sınırlandırmak ve performans için StringBuilder sınıfını kullanıyoruz.
-                StringBuilder sb = new StringBuilder(500);
-
-                GetPrivateProfileString(kategori, anahtar, "", sb, sb.Capacity, dosyaAdi);
-
-                veri = sb.ToString();
-                sb.Clear();
-                return veri;
+                this.handlers = default(DiscordRpc.EventHandlers);
+                DiscordRpc.Initialize("698182166168993862", ref this.handlers, true, null);
+                this.handlers = default(DiscordRpc.EventHandlers);
+                DiscordRpc.Initialize("698182166168993862", ref this.handlers, true, null);
+                this.presence.details = Sunucuadı;
+                this.presence.smallImageText = "Daha detayli bilgilendirme icin github.com/ssilistre ziyaret ediniz. \n Kendi Luancherinizi yapabilirsiniz. Bedavaya";
+                if (altmesaj=="")
+                {
+                    this.presence.state = kisiSayisi + " oyuncu suan online !";
+                }
+                else
+                {
+                    this.presence.state = altmesaj;
+                }
+                this.presence.largeImageKey = "fivem-logo";
+                this.presence.smallImageKey = "_mam";
+                this.presence.largeImageText = ReklamMetni;
+                DiscordRpc.UpdatePresence(ref this.presence);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show("Ayar ini dosyasını çözümleyemedim. Tekrar Kontrol ediniz.",baslikHatalar);
-                return veri;
-               
+
+                
             }
-         }
+        }
         /***********************************
      * 
      * 
@@ -412,7 +404,80 @@ namespace fivemLuncher
                 return bayrak;
             }
         }
-      
-    }
+        /***********************************
+         * 
+         * 
+         * 
+         * 
+         * 
+         * ********************************/
+        public void steamidgir(string hexid)
+        {
+            try
+            {
+                long sayi = Convert.ToInt64(hexid.Trim());
+                String b = Convert.ToString(sayi, 16);
+                string c = "steam:" + b;
+                Properties.Settings.Default.steamid = c;
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception)
+            {
 
+                MessageBox.Show("Lütfen Sadece Steam64ID nizi giriniz.","Steam ID Hatası");
+            }
+        }
+        /***********************************
+          * 
+          * 
+          * 
+          * 
+          * 
+          * ********************************/
+        public void optimizeYap()
+        {
+            try
+            {
+                Process[] processes = Process.GetProcesses();
+                long num = 0L;
+                Process[] array = processes;
+                foreach (Process process in array)
+                {
+                    num += process.WorkingSet64;
+                }
+                num = 0L;
+                Process[] array2 = processes;
+                foreach (Process process2 in array2)
+                {
+                    try
+                    {
+                        EmptyWorkingSet(process2.Handle);
+                    }
+                    catch
+                    {
+                    }
+                }
+                processes = Process.GetProcesses();
+                Process[] array3 = processes;
+                foreach (Process process3 in array3)
+                {
+                    num += process3.WorkingSet64;
+                }
+            }
+            catch (Exception)
+            {
+
+             
+            }
+            }
+        /***********************************
+         * 
+         * 
+         * 
+         * 
+         * 
+         * ********************************/
+        
+    }
 }
+
