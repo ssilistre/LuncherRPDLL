@@ -98,6 +98,11 @@ namespace LeyjonRPLuncher
         {
 
         }
+
+        private void btnSorunGider_Click(object sender, EventArgs e)
+        {
+            LuncherRP.DizinSec();
+        }
     }
 }
     

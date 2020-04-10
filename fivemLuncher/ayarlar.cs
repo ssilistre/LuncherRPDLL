@@ -1,8 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using Ionic.Zip;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -47,7 +49,8 @@ namespace fivemLuncher
        private string sunucuKayitLink="";
        private string sunucuOnlinesayisi = "";
        private string kisiSayisi = "";
-       private string kayitliSteamid = Properties.Settings.Default.steamid; //sss
+        private string DosyaYolu = "";
+        private string kayitliSteamid = Properties.Settings.Default.steamid; //sss
        /* Bütün Tanımlamalar ve Ayarlar*////
         /*********************************/
         /*********************************/
@@ -477,7 +480,48 @@ namespace fivemLuncher
          * 
          * 
          * ********************************/
-        
+        public void DizinSec()
+        {
+            try
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                     DosyaYolu = fbd.SelectedPath + "\\citizen";
+                    if (Directory.Exists(DosyaYolu))
+                    {
+                        WebClient wc = new WebClient();
+                        wc.DownloadFile(new Uri("https://www.dropbox.com/s/7px9gp44i9kcwcc/citizen.zip?dl=1"), DosyaYolu + "harita.zip");
+                        //    wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
+                        
+                        using (ZipFile zip = ZipFile.Read(DosyaYolu + "harita.zip"))
+                        {
+                            foreach (ZipEntry e in zip)
+                            {
+                                e.Extract(DosyaYolu, ExtractExistingFileAction.OverwriteSilently);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Fivem Klasorunde gerekli dosyalar bulunamadı.", baslikHatalar);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Hata ile karşılaştım üzgünüm..");
+            }
+        }
+        /***********************************
+        * 
+        * 
+        * 
+        * 
+        * 
+        * ********************************/
+       
     }
 }
 

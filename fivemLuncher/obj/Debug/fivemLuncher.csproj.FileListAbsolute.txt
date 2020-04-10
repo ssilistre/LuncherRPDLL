@@ -28,3 +28,6 @@ D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.csproj.CopyComplete
 D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.dll
 D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.pdb
 D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.csprojAssemblyReference.cache
+D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.dll
+D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.pdb
+D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.xml
