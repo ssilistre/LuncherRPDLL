@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ayarlar.cs" />
+    <Compile Include="lib.cs" />
     <Compile Include="DiscordRpc.cs" />
     <Compile Include="Katkilarim.cs">
       <SubType>Form</SubType>

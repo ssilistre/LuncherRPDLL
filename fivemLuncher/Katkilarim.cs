@@ -14,7 +14,7 @@ namespace fivemLuncher
     public partial class Katkilarim : Form
     {
 
-        ayarlar ayarlar = new ayarlar();
+        lib ayarlar = new lib();
         public Katkilarim()
         {
             InitializeComponent();
@@ -28,14 +28,15 @@ namespace fivemLuncher
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("1-Açılan sitede 'enter your input' yazısını bulun.\n2-Ardından steam profil sayfanızın linkini yapıştırın ve enter tuşuna basın.\n3-Açılan sayfadaki Steam 64 ID kopyalayın.\n4- Programdaki boş alana yapıştırın kaydet diyin.", "Steam ID Nasıl Bulunur ?");
-             ayarlar.linkac("https://steamid.co/");
+             ayarlar.open("https://steamid.co/");
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
             try
             {
-                long sayi = Convert.ToInt64(txtSteamid.Text.Trim());
+                string yazilandeger = txtSteamid.Text.Trim();
+                long sayi = Convert.ToInt64(yazilandeger);
                 String b = Convert.ToString(sayi, 16);
                 string c = "steam:" + b;
                 Properties.Settings.Default.steamid = c;

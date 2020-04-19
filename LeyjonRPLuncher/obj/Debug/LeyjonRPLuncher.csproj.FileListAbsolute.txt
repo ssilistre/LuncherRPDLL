@@ -33,3 +33,8 @@ D:\Burası\LuncherRPDLL\LeyjonRPLuncher\obj\Debug\LeyjonRPLuncher.pdb
 D:\Burası\LuncherRPDLL\LeyjonRPLuncher\bin\Debug\DotNetZip.dll
 D:\Burası\LuncherRPDLL\LeyjonRPLuncher\bin\Debug\DotNetZip.pdb
 D:\Burası\LuncherRPDLL\LeyjonRPLuncher\bin\Debug\DotNetZip.xml
+D:\Burası\LuncherRPDLL\LeyjonRPLuncher\bin\Debug\LeyjonRPLuncher.exe.manifest
+D:\Burası\LuncherRPDLL\LeyjonRPLuncher\bin\Debug\LeyjonRPLuncher.application
+D:\Burası\LuncherRPDLL\LeyjonRPLuncher\obj\Debug\LeyjonRPLuncher.TrustInfo.xml
+D:\Burası\LuncherRPDLL\LeyjonRPLuncher\obj\Debug\LeyjonRPLuncher.exe.manifest
+D:\Burası\LuncherRPDLL\LeyjonRPLuncher\obj\Debug\LeyjonRPLuncher.application

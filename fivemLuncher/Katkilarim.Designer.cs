@@ -65,7 +65,7 @@
             this.resimKutusu.ImageLocation = "https://i.hizliresim.com/yjgeOL.png";
             this.resimKutusu.Location = new System.Drawing.Point(-1, 144);
             this.resimKutusu.Name = "resimKutusu";
-            this.resimKutusu.Size = new System.Drawing.Size(552, 145);
+            this.resimKutusu.Size = new System.Drawing.Size(552, 155);
             this.resimKutusu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.resimKutusu.TabIndex = 4;
             this.resimKutusu.TabStop = false;
@@ -90,7 +90,7 @@
             // 
             // btnKaydet
             // 
-            this.btnKaydet.Location = new System.Drawing.Point(161, 110);
+            this.btnKaydet.Location = new System.Drawing.Point(164, 110);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(219, 32);
             this.btnKaydet.TabIndex = 7;
