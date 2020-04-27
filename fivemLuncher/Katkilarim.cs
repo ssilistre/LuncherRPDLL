@@ -42,6 +42,7 @@ namespace fivemLuncher
                 Properties.Settings.Default.steamid = c;
                 Properties.Settings.Default.Save();
                 this.Close();
+                Application.Restart();
             }
             catch (Exception)
             {

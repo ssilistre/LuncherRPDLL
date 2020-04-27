@@ -31,3 +31,4 @@ D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.csprojAssemblyRefere
 D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.dll
 D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.pdb
 D:\Burası\LuncherRPDLL\fivemLuncher\bin\Debug\DotNetZip.xml
+D:\Burası\LuncherRPDLL\fivemLuncher\obj\Debug\fivemLuncher.Properties.Resources.resources

@@ -55,26 +55,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="fivemLuncher.dll" size="269312">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="fivemLuncher.dll" size="648704">
       <assemblyIdentity name="fivemLuncher" version="1.0.0.2" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4vhBOB4xjuCpVUfSLqrP6d6o/WR21mS6f6xhtMkzPBI=</dsig:DigestValue>
+        <dsig:DigestValue>gnezIZcrCJHInbQZNs/ae93ULqMxRTqDrnGGCjHGs20=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LeyjonRPLuncher.exe" size="397776">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LeyjonRPLuncher.exe" size="1390544">
       <assemblyIdentity name="LeyjonRPLuncher" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>TPw9Qo49++bfn5RkRLT+493sbPiTu79ww9r6lL2MvUY=</dsig:DigestValue>
+        <dsig:DigestValue>ngo0gPkYJaRUi7lcdciZPNBIY6yT8e+QcvUnBACKJVk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -17,6 +17,7 @@ using System.Media;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Threading;
 
 namespace fivemLuncher
 {
@@ -27,9 +28,9 @@ namespace fivemLuncher
         private DiscordRpc.RichPresence presence;
         [DllImport("psapi.dll")]
         public static extern bool EmptyWorkingSet(IntPtr hProcess);
-
+  
         /* Bütün Tanımlamalar ve Ayarlar*/
-        private string kontrolEdilicekUrl = "http://fivemtr.net/guncelleme.php";
+        private string kontrolEdilicekUrl = "http://panel.fivemcode.com/guncelleme.php";
         private string hileKontrol = "";
         private string jsonVerisi = "";
         private string ip_ana = "";
@@ -43,12 +44,16 @@ namespace fivemLuncher
         private string[] definedPrograms = {};
         private string avatarUrl = "";
         private string userName = "";
-        private string kisiSayisi = "";
+        public string kisiSayisi = "";
         private string DosyaYolu = "";
         private string DosyaAdi = "";
         private string DiscordRC = "";
-        private string sunucuDurum = "";
+        public string sunucuDurum = "";
         private string version = "";
+        public string  duyurular = "";
+        public string hileTespit = "";
+        long steamnewid =0;
+        public string SteamUserName = "";
         private string kayitliSteamid = Properties.Settings.Default.steamid; 
          /* Bütün Tanımlamalar ve Ayarlar*////
         /*********************************/
@@ -76,7 +81,80 @@ namespace fivemLuncher
         /*******Public Olanlar*********/
         /*********************************/
         /*********************************/
+        public void serverinfos(String serverkey)
+        {
+            try
+            {
+                if (NetworkInterface.GetIsNetworkAvailable() == true)
+                {
+                    HttpWebRequest request = WebRequest.Create("http://api.fivemcode.com/launcher.php?sunucuid=" + serverkey) as HttpWebRequest;
+                    request.Accept = "application/x-ms-application, image/jpeg, application/xaml+xml,         image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
+                    request.Headers["Accept-Language"] = "tr-TR";
+                    request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    request.KeepAlive = true;
+                    request.AllowAutoRedirect = true;
+                    request.Timeout = 60000;
+                    request.Method = "GET";
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
 
+                        StreamReader reader = new StreamReader(response.GetResponseStream());
+                        jsonVerisi = reader.ReadToEnd();
+                        JObject json = JObject.Parse(jsonVerisi);
+
+
+                        version = json["version"].ToString();
+                        ip_cekilen = json["ip"].ToString();
+                        port_cekilen = json["port"].ToString();
+                        sunucuDurum = json["sunucu"].ToString();
+                        guncellemeLink = json["guncellemelink"].ToString();
+                        userName = json["discordbot"].ToString();
+                        avatarUrl = json["avatarurl"].ToString();
+                        DiscordRC = json["discordrc"].ToString();
+                        duyurular = json["duyurular"].ToString();
+                        kisiSayisi = json["onlinekisi"].ToString();
+
+
+                    }
+
+
+                    steamnewid = Steam32ToSteam64(SteamLogin());
+
+                    HttpWebRequest request2 = WebRequest.Create("http://panel.fivemcode.com/usernamefinder.php?steam64id=" + steamnewid) as HttpWebRequest;
+                    request2.Accept = "application/x-ms-application, image/jpeg, application/xaml+xml,         image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
+                    request2.Headers["Accept-Language"] = "tr-TR";
+                    request2.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    request2.KeepAlive = true;
+                    request2.AllowAutoRedirect = true;
+                    request2.Timeout = 60000;
+                    request2.Method = "GET";
+                    using (HttpWebResponse response2 = request2.GetResponse() as HttpWebResponse)
+                    {
+
+                        StreamReader reader2 = new StreamReader(response2.GetResponseStream());
+                        SteamUserName = reader2.ReadToEnd();
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("İnternet bağlnatısı hatası. Bağlantınız yok!", "FivemTR.NET Luncher Hatası", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    closeFivem();
+                }
+            }
+            catch (Exception)
+            {
+
+
+            }
+        }
+        /***********************************
+   * 
+   * 
+   * 
+   * 
+   * 
+   * ********************************/
         public void stopHacks()
         {
             if (NetworkInterface.GetIsNetworkAvailable() == true) 
@@ -88,7 +166,8 @@ namespace fivemLuncher
                               .Where(x => x.ProcessName.ToLower()
                                            .StartsWith(process))
                               .ToList()
-                              .ForEach(x => x.Kill());                             
+                              .ForEach(x => x.Kill());
+                    
                 }        
             }
             else
@@ -134,7 +213,7 @@ namespace fivemLuncher
         * 
         * 
         * ********************************/
-        public void oldConnectionPanel(string serverkey)
+        public void connectWithOutWhitelist(string serverkey)
         {
             try
             {
@@ -145,22 +224,52 @@ namespace fivemLuncher
                 String b = Convert.ToString(sayi, 16);
                 string value = "steam:" + b;
 
-                sunucuipogen(serverkey.Trim());
-                NameValueCollection data = new NameValueCollection();
-                WebClient webClient = new WebClient();
-                byte[] bytes = webClient.UploadValues("http://oyna.tekyazilim.shop/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&online=1&durum=1", "POST", data);
-                string @string = Encoding.UTF8.GetString(bytes);
-                System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
+
+                if (ip_cekilen == "")
+                {
+                    serverinfos(serverkey);
+                    HttpWebRequest sunucubaglan = WebRequest.Create("http://api.fivemcode.com/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&steam64id=" + steamnewid + "&online=0&durum=1") as HttpWebRequest;
+                    sunucubaglan.Headers["Accept-Language"] = "tr-TR";
+                    sunucubaglan.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    sunucubaglan.KeepAlive = true;
+                    sunucubaglan.AllowAutoRedirect = true;
+                    sunucubaglan.Timeout = 60000;
+                    sunucubaglan.Method = "POST";
+                    using (HttpWebResponse sunucuyanit = sunucubaglan.GetResponse() as HttpWebResponse)
+                    {
+
+                        StreamReader okuyucu = new StreamReader(sunucuyanit.GetResponseStream());
+                        SteamUserName = okuyucu.ReadToEnd();
+
+                    }
+                    System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
+                }
+                else
+                {
+                    HttpWebRequest sunucubaglan = WebRequest.Create("http://api.fivemcode.com/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&steam64id=" + steamnewid + "&online=1&durum=1") as HttpWebRequest;
+                    sunucubaglan.Headers["Accept-Language"] = "tr-TR";
+                    sunucubaglan.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    sunucubaglan.KeepAlive = true;
+                    sunucubaglan.AllowAutoRedirect = true;
+                    sunucubaglan.Timeout = 60000;
+                    sunucubaglan.Method = "POST";
+                    using (HttpWebResponse sunucuyanit = sunucubaglan.GetResponse() as HttpWebResponse)
+                    {
+
+                        StreamReader okuyucu = new StreamReader(sunucuyanit.GetResponseStream());
+                        SteamUserName = okuyucu.ReadToEnd();
+
+                    }
+                    System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
+                }
+
             }
             catch (Exception)
             {
 
-                throw;
+                
             }
-             
-                 
-        
-            
+
         }
         /***********************************
         * 
@@ -179,33 +288,6 @@ namespace fivemLuncher
             {
 
                 MessageBox.Show("Bir sorunla karşılaşıldı Linkac komutundu.");
-            }
-        }
-        /***********************************
-        * 
-        * 
-        * 
-        * 
-        * 
-        * ********************************/
-        public string onlinePlayers(string serverkey)
-        {
-            try
-            {
-                string link = "http://oyna.tekyazilim.shop/oku.php?sunucuid=" + serverkey.Trim();
-                Uri url = new Uri(link); 
-                WebClient client = new WebClient(); 
-                client.Encoding = Encoding.UTF8; 
-                string html = client.DownloadString(url);
-                String kisisayisi = html.ToString();
-                kisiSayisi = kisisayisi;
-                return kisiSayisi;
-            }
-            catch (Exception)
-            {
-
-                String kisisayisi = "0";
-                return kisisayisi;
             }
         }
         /***********************************
@@ -413,55 +495,27 @@ namespace fivemLuncher
       * 
       * 
       * ********************************/
-        public void serverinfos(String serverkey)
-        {
-            try
-            {
-                if (NetworkInterface.GetIsNetworkAvailable() == true)
-                {
-                    HttpWebRequest request = WebRequest.Create("http://localhost/api/launcher.php?sunucuid=" + serverkey) as HttpWebRequest;
-                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                    {
-                        StreamReader reader = new StreamReader(response.GetResponseStream());
-                        jsonVerisi = reader.ReadToEnd();
-                        JObject json = JObject.Parse(jsonVerisi);
-
-
-                        version = json["version"].ToString();
-                        ip_cekilen = json["ip"].ToString();
-                        port_cekilen = json["port"].ToString();
-                        sunucuDurum = json["sunucu"].ToString();
-                        guncellemeLink= json["guncellemelink"].ToString();
-                        userName = json["discordbot"].ToString();
-                        avatarUrl = json["avatarurl"].ToString();
-                        DiscordRC = json["discordrc"].ToString();
-                        
-                       
-
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("İnternet bağlnatısı hatası. Bağlantınız yok!", "FivemTR.NET Luncher Hatası", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    closeFivem();
-                }
-            }
-            catch (Exception)
-            {
-
-
-            }
-        }
-        /***********************************
-   * 
-   * 
-   * 
-   * 
-   * 
-   * ********************************/
         public void ownUpdate(String versionTxt,String newUpdateDownnloadLink)
         {
                 try
+                {
+                if (versionTxt =="" && newUpdateDownnloadLink =="")
+                {
+                    if (Application.ProductVersion==version)
+                    {
+                       
+
+                    }
+                    else
+                    {
+                        string path = Path.GetDirectoryName(Application.ExecutablePath);
+                        WebClient wc2 = new WebClient();
+                        wc2.DownloadFile(new Uri(guncellemeLink), path + "\\newupdate.exe");
+                        System.Diagnostics.Process.Start(path + @"\\newupdate.exe");
+                        Application.Exit();
+                    }
+                }
+                else
                 {
                     string link = versionTxt;  //link değişkenine çekeceğimiz web sayafasının linkini yazıyoruz.
                     Uri url = new Uri(link); //Uri tipinde değişeken linkimizi veriyoruz.
@@ -476,38 +530,16 @@ namespace fivemLuncher
                     }
                     else
                     {
-                        DialogResult secenek = MessageBox.Show("Selamlar yeni bir güncelleme var yapmak istermisin ?\nBir şeyler değiştiyse Luncherda sıkıntı çıkabilir Eminmisin ?", "Güncelleme Bildirimi", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        string path = Path.GetDirectoryName(Application.ExecutablePath);
+                        WebClient wc2 = new WebClient();
+                        wc2.DownloadFile(new Uri(newUpdateDownnloadLink), path + "\\newupdate.exe");
+                        System.Diagnostics.Process.Start(path + @"\\newupdate.exe");
+                        Application.Exit();
 
-                        if (secenek == DialogResult.Yes)
-                        {
-                            string path = Path.GetDirectoryName(Application.ExecutablePath);
-                            WebClient wc = new WebClient();
-                            wc.DownloadFile(new Uri(newUpdateDownnloadLink), path + "\\yeni_guncelleme.zip");
-                            //    wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-
-                            using (ZipFile zip = ZipFile.Read(path + "\\yeni_guncelleme.zip"))
-                            {
-                                try
-                                {
-                                    foreach (ZipEntry e in zip)
-                                    {
-                                        e.Extract(path, ExtractExistingFileAction.OverwriteSilently);
-                                    }
-                                }
-                                catch (Exception)
-                                {
-
-                                    MessageBox.Show("Güncellemeyi zip şeklinde indirdim. Zipten çıkartırken bir sorunla karşılaştım.\nLütfen uygulamayı kapatıp. Zipe sağtıklayıp buraya çıkart dermisin ?", "Güncelleme Uyarısı");
-                                }
-                            }
-                        }
-                        else if (secenek == DialogResult.No)
-                        {
-
-                        }
                     }
                 }
-                catch (Exception)
+                 }
+                  catch (Exception)
                 {
 
 
@@ -520,13 +552,13 @@ namespace fivemLuncher
            * 
            * 
            * ********************************/
-        public void panelFivemCode(String serverkey)
+        public void connectwithWhiteList(String serverkey)
         {
             try
             {
                 steamCalissiyormu();
                 kayitliSteamid =  SteamLogin();
-                long steamnewid = Steam32ToSteam64(SteamLogin());
+                steamnewid = Steam32ToSteam64(SteamLogin());
                 long sayi = Convert.ToInt64(steamnewid);
                 String b = Convert.ToString(sayi, 16);
                 string value = "steam:" + b;
@@ -535,18 +567,38 @@ namespace fivemLuncher
                 if (ip_cekilen =="")
                 {
                     serverinfos(serverkey);
-                    NameValueCollection data = new NameValueCollection();
-                    WebClient webClient = new WebClient();
-                    byte[] bytes = webClient.UploadValues("http://oyna.tekyazilim.shop/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&online=1&durum=1", "POST", data);
-                    string @string = Encoding.UTF8.GetString(bytes);
+                    HttpWebRequest sunucubaglan = WebRequest.Create("http://api.fivemcode.com/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&steam64id=" + steamnewid + "&online=0&durum=3") as HttpWebRequest;
+                    sunucubaglan.Headers["Accept-Language"] = "tr-TR";
+                    sunucubaglan.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    sunucubaglan.KeepAlive = true;
+                    sunucubaglan.AllowAutoRedirect = true;
+                    sunucubaglan.Timeout = 60000;
+                    sunucubaglan.Method = "POST";
+                    using (HttpWebResponse sunucuyanit = sunucubaglan.GetResponse() as HttpWebResponse)
+                    {
+
+                        StreamReader okuyucu = new StreamReader(sunucuyanit.GetResponseStream());
+                        SteamUserName = okuyucu.ReadToEnd();
+
+                    }
                     System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
                 }
                 else
                 {
-                    NameValueCollection data = new NameValueCollection();
-                    WebClient webClient = new WebClient();
-                    byte[] bytes = webClient.UploadValues("http://oyna.tekyazilim.shop/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&online=1&durum=1", "POST", data);
-                    string @string = Encoding.UTF8.GetString(bytes);
+                    HttpWebRequest sunucubaglan = WebRequest.Create("http://api.fivemcode.com/kayit.php?sunucuid=" + serverkey + "&steamhexid=" + value + "&steam64id=" + steamnewid + "&online=0&durum=3") as HttpWebRequest;
+                    sunucubaglan.Headers["Accept-Language"] = "tr-TR";
+                    sunucubaglan.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    sunucubaglan.KeepAlive = true;
+                    sunucubaglan.AllowAutoRedirect = true;
+                    sunucubaglan.Timeout = 60000;
+                    sunucubaglan.Method = "POST";
+                    using (HttpWebResponse sunucuyanit = sunucubaglan.GetResponse() as HttpWebResponse)
+                    {
+
+                        StreamReader okuyucu = new StreamReader(sunucuyanit.GetResponseStream());
+                        SteamUserName = okuyucu.ReadToEnd();
+
+                    }
                     System.Diagnostics.Process.Start("fivem://connect/" + ip_cekilen + ":" + port_cekilen);
                 }
                 
@@ -554,7 +606,7 @@ namespace fivemLuncher
             catch (Exception)
             {
 
-                throw;
+                
             }
         }
         /***********************************
@@ -578,9 +630,17 @@ namespace fivemLuncher
         {
             try
             {
+          
                 if (NetworkInterface.GetIsNetworkAvailable() == true)
                 {
                     HttpWebRequest request = WebRequest.Create(kontrolEdilicekUrl) as HttpWebRequest;
+                    request.Accept = "application/x-ms-application, image/jpeg, application/xaml+xml,         image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
+                    request.Headers["Accept-Language"] = "tr-TR";
+                    request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    request.KeepAlive = true;
+                    request.AllowAutoRedirect = true;
+                    request.Timeout = 60000;
+                    request.Method = "GET";
                     using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                     {
                         StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -666,38 +726,6 @@ namespace fivemLuncher
            * 
            * 
            * ********************************/
-        private string sunucuipogen(string sunucuanahtari)
-        {
-            try
-            {
-                string bayrak;
-                string link = "http://oyna.tekyazilim.shop/sunucubilgisi.php?sunucuid=" + sunucuanahtari;  //link değişkenine çekeceğimiz web sayafasının linkini yazıyoruz.
-                Uri url = new Uri(link); //Uri tipinde değişeken linkimizi veriyoruz.
-                WebClient client = new WebClient(); // webclient nesnesini kullanıyoruz bağlanmak için.
-                client.Encoding = Encoding.UTF8; //türkçe karakter sorunu yapmaması için encoding utf8 yapıyoruz.
-                string html = client.DownloadString(url); // siteye bağlanıp tüm sayfanın html içeriğini çekiyoruz.
-                String ipadres = html.ToString();
-                string[] bilgiler = ipadres.Split(':'); //hobileri , ile ayırıp hobiListe içine aktarıyoruz.
-
-                ip_cekilen = bilgiler[0];
-                port_cekilen = bilgiler[1];
-
-
-                return bayrak = "1";
-            }
-            catch (Exception)
-            {
-                string bayrak = "0";
-                return bayrak;
-            }
-        }
-        /***********************************
-        * 
-        * 
-        * 
-        * 
-        * 
-        * ********************************/
         private static byte[] Post(string uri, NameValueCollection pairs)
         {
             using (WebClient webClient = new WebClient())
