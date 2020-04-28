@@ -48,6 +48,8 @@ namespace fivemLuncher
         private string DosyaYolu = "";
         private string DosyaAdi = "";
         private string DiscordRC = "";
+        private string DiscordRCBuyukResim = "fivem-logo";
+        private string DiscordRCKucukResim = "_mam";
         public string sunucuDurum = "";
         private string version = "";
         public string  duyurular = "";
@@ -113,7 +115,8 @@ namespace fivemLuncher
                         DiscordRC = json["discordrc"].ToString();
                         duyurular = json["duyurular"].ToString();
                         kisiSayisi = json["onlinekisi"].ToString();
-
+                        DiscordRCBuyukResim = json["discordRCbuyukResim"].ToString();
+                        DiscordRCKucukResim = json["discordRCkucukResim"].ToString();
 
                     }
 
@@ -359,8 +362,8 @@ namespace fivemLuncher
                 {
                     this.presence.state = secMsg;
                 }
-                this.presence.largeImageKey = "fivem-logo";
-                this.presence.smallImageKey = "_mam";
+                this.presence.largeImageKey = DiscordRCBuyukResim;
+                this.presence.smallImageKey = DiscordRCKucukResim;
                 this.presence.largeImageText = ReklamMetni;
                 DiscordRpc.UpdatePresence(ref this.presence);
             }

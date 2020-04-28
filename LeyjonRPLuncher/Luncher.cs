@@ -12,7 +12,7 @@ namespace LeyjonRPLuncher
     public partial class Luncher : Form
     {
         lib rp = new lib();
-        String serverkey = "5ea5fc0139789";
+        String serverkey = "5ea6f53648ddb";
         String DiscordRCSunucuAD = "Sunucu Adınız";
         String DiscordRCAltMesaj = "AltMesajınız.";
         public Luncher()
