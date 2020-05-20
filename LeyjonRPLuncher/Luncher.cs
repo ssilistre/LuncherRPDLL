@@ -12,7 +12,7 @@ namespace LeyjonRPLuncher
     public partial class Luncher : Form
     {
         lib rp = new lib();
-        String serverkey = "5ea6f53648ddb";
+        String serverkey = "5eafc52c8045f";
         String DiscordRCSunucuAD = "Sunucu Adınız";
         String DiscordRCAltMesaj = "AltMesajınız.";
         public Luncher()
@@ -32,7 +32,7 @@ namespace LeyjonRPLuncher
             lblduyurumetni.Text = rp.duyurular; //news
             lblSayi.Text = rp.kisiSayisi; //player count
             lblStatu.Text = rp.sunucuDurum; //server status
-            rp.DicordRC(DiscordRCSunucuAD, DiscordRCAltMesaj); //Discord RC
+            rp.DicordRC(DiscordRCSunucuAD, DiscordRCAltMesaj,""); //Discord RC
             if (lblStatu.Text=="online")
             {
                 lblStatu.ForeColor = Color.Green;
@@ -42,6 +42,7 @@ namespace LeyjonRPLuncher
                 lblStatu.ForeColor = Color.Red;
             }
             Steamusername.Text = rp.SteamUserName; //Steam name.
+            rp.ownUpdate("","");
         }
         private void Luncher_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -61,6 +62,8 @@ namespace LeyjonRPLuncher
             //rp.connectWithOutWhitelist("5ea41ddb8a15b"); //without whitlist use this block.
            // rp.connectFivem("İp Number", "Port Number"); //if just connect server pls use this block.
             hileKontrol.Enabled = true;
+
+
            
         }
 
