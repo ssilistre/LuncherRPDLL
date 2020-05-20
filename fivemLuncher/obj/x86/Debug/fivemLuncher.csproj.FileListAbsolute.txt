@@ -1,0 +1,9 @@
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.Properties.Resources.resources
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.csproj.GenerateResource.cache
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.csproj.CoreCompileInputs.cache
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\bin\Debug\fivemLuncher.dll.config
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\bin\Debug\fivemLuncher.dll
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\bin\Debug\fivemLuncher.pdb
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.csproj.CopyComplete
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.dll
+C:\Users\salam\Downloads\Compressed\LuncherRPDLL-master\LuncherRPDLL-master\fivemLuncher\obj\x86\Debug\fivemLuncher.pdb
