@@ -1,105 +1,59 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.IO;
 using System.Net;
 
 namespace fivemLuncher
 {
     class connectionOutSide
     {
-        internal static bool getPost(String url,String serverkey)
+        internal static bool getPost(string url, string serverKey)
         {
-            bool flag = false;
-           
-            HttpWebRequest request = WebRequest.Create(url + serverkey) as HttpWebRequest;
-            request.Accept = "application/x-ms-application, image/jpeg, application/xaml+xml,         image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
-            request.Headers["Accept-Language"] = "tr-TR";
-            request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-            request.KeepAlive = true;
-            request.AllowAutoRedirect = true;
-            request.Timeout = 10000;
-            request.Method = "POST";
-
             try
             {
-
-         
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var webClient = new WebClient())
                 {
-
-                    StreamReader reader = new StreamReader(response.GetResponseStream());
-                    String jsonVerisi = reader.ReadToEnd();
-                    jsonClass _json = JsonConvert.DeserializeObject<jsonClass>(jsonVerisi);
-                    flag = true;
+                    var jsonVerisi = webClient.UploadString($"{url}{serverKey}", serverKey);
+                    var _json = JsonConvert.DeserializeObject<jsonClass>(jsonVerisi);
                 }
-                return flag;
-            }
-            catch (Exception)
-            {
 
-                return flag;
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
-        internal static string getRegister(String url,String serverkey,String value,String steamnewid,String Durum)
+        internal static string getRegister(string url, string serverKey, string value, string steamNewId, string durum)
         {
-            string SteamUserName = "";
-             
-            HttpWebRequest sunucubaglan = WebRequest.Create(url + serverkey + "&steamhexid=" + value + "&steam64id=" + steamnewid + "&online=0&durum="+Durum) as HttpWebRequest;
-            sunucubaglan.Headers["Accept-Language"] = "tr-TR";
-            sunucubaglan.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-            sunucubaglan.KeepAlive = true;
-            sunucubaglan.AllowAutoRedirect = true;
-            sunucubaglan.Timeout = 10000;
-            sunucubaglan.Method = "POST";
+            var steamUserName = string.Empty;
 
             try
             {
-                using (HttpWebResponse sunucuyanit = sunucubaglan.GetResponse() as HttpWebResponse)
+                using (var webClient = new WebClient())
                 {
-
-                    StreamReader okuyucu = new StreamReader(sunucuyanit.GetResponseStream());
-                    SteamUserName = okuyucu.ReadToEnd();
-                    return SteamUserName;
+                    
+                    steamUserName = webClient.UploadString($"{url}{serverKey}&steamhexid={value}&steam64id={steamNewId}&online=0&durum={durum}", $"{serverKey}&steamhexid={value}&steam64id={steamNewId}&online=0&durum={durum}");
                 }
             }
-            catch (Exception)
-            {
+            catch { }
 
-                return SteamUserName;
-            }
-
+            return steamUserName;
         }
 
-        internal static bool getPostHack(string url, string serverkey,string steamid64,string dosya)
+        internal static bool getPostHack(string url, string serverKey, string steamId64, string dosya)
         {
-            bool flag = false;
-            HttpWebRequest request = WebRequest.Create(url + serverkey+ "&steam64id=" + steamid64+ "&hileadi=" + dosya) as HttpWebRequest;
-            request.Accept = "application/x-ms-application, image/jpeg, application/xaml+xml,         image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
-            request.Headers["Accept-Language"] = "tr-TR";
-            request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-            request.KeepAlive = true;
-            request.AllowAutoRedirect = true;
-            request.Timeout = 10000;
-            request.Method = "POST";
-
             try
             {
-
-
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var webClient = new WebClient())
                 {
-
-                    StreamReader reader = new StreamReader(response.GetResponseStream());
-                    String jsonVerisi = reader.ReadToEnd();
-                    flag = true;
+                    var jsonVerisi = webClient.UploadString($"{url}{serverKey}&steam64id={steamId64}&hileadi={dosya}", $"{serverKey}&steam64id={steamId64}&hileadi={dosya}");
                 }
-                return flag;
-            }
-            catch (Exception)
-            {
 
-                return flag;
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }
