@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace fivemLuncher
@@ -14,7 +10,7 @@ namespace fivemLuncher
         //Sınıfımızı Extension Method olarak kullanmak istediğimiz için static tanımlıyoruz.
 
         static string dizinYolu = Path.GetDirectoryName(Application.ExecutablePath);
-        static string dosyaAdi = dizinYolu + "\\ayarlar.ini";
+        static string dosyaAdi = $"{dizinYolu}\\ayarlar.ini";
 
 
         //Yazma işlemleri için gerekli olan dll'i import edip, ini için WritePrivateProfileString metodunun görüntüsünü aldık
@@ -38,11 +34,11 @@ namespace fivemLuncher
         public static string VeriOku(string kategori, string anahtar)
         {
             //Okunacak veriyi okumak ve kapasitesini sınırlandırmak ve performans için StringBuilder sınıfını kullanıyoruz.
-            StringBuilder sb = new StringBuilder(500);
+            var sb = new StringBuilder(500);
 
-            GetPrivateProfileString(kategori, anahtar, "", sb, sb.Capacity, dosyaAdi);
+            GetPrivateProfileString(kategori, anahtar, string.Empty, sb, sb.Capacity, dosyaAdi);
 
-            string veri = sb.ToString();
+            var veri = sb.ToString();
             sb.Clear();
             return veri;
         }
